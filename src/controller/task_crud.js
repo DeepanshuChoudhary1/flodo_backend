@@ -72,7 +72,7 @@ exports.addTask = async (req, res) => {
         if (progressStatus != "Done") {
             if (id) {
                 console.log("your block id is not null ");
-                const existsTaskData = await taskSchema.findbyId(id);
+                const existsTaskData = await taskSchema.findById(id);
                 const fromBlockDate = new Date(existsTaskData.dueDate);
                 const toBlockDate = new Date(req.body.dueDate);
 
@@ -145,8 +145,7 @@ exports.addTask = async (req, res) => {
     }
     catch (e) {
         console.log("error for connect adding task", e);
-
-        let message = e;
+        let message = e.message || "Something went wrong";
         if (e.code === 11000) {
             const field = Object.keys(e.keyValue)[0]; // e.g. title
             message = `${field} already exists`;
@@ -203,11 +202,11 @@ exports.updateTask = async (req, res) => {
         });
     }
     catch (e) {
-
+        let message = e.message || "Something went wrong";
         console.log("error for updating the code is ", e);
         res.json({
             success: false,
-            message: e
+            message: message
         });
 
         // console.log(e);
@@ -266,9 +265,10 @@ exports.deleteTask = async (req, res) => {
     }
 
     catch (e) {
+        let message = e.message || "Something went wrong";
         res.json({
             success: false,
-            message: e
+            message: message
         });
 
     }
