@@ -272,5 +272,39 @@ exports.deleteTask = async (req, res) => {
         });
 
     }
+}
+
+// single task find by id
+exports.findTaskById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        // console.log(`your id ${req.params.id}`)
+        const task = await taskSchema.findById(id);
+
+        if (task) {
+            return res.status(200).json({
+                success: true,
+                message: "Task fetch Successfully",
+                data: task
+            });
+        } else {
+            return res.status(200).json({
+                success: true,
+                message: "Task Not found",
+
+            });
+
+        }
+    }
+
+    catch (e) {
+        let message = e.message || "Something went wrong";
+        res.json({
+            success: false,
+            message: message
+        });
+
+    }
+
 
 }

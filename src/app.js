@@ -2,8 +2,10 @@ const express = require('express');
 const app = express();
 const cors = require("cors");
 
-const dbConnection = require("../src/config/connnectDb");
-const router = require("../src/routes/showtasks");
+const dbConnection = require("./config/connnectDb");
+const router = require("./routes/showtasks");
+// const router = require("../src/routes/showtasks");
+
 
 app.use(express.urlencoded({ extended: true })),
     app.use(express.json());
