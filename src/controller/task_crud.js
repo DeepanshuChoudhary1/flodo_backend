@@ -188,7 +188,7 @@ exports.updateTask = async (req, res) => {
             });
         }
         // const toBlockDate = new Date(req.body.dueDate);
-        const blockId = await taskSchema.blockedBy.id;
+        const blockId = await req.body.blockedBy.id;
 
 
 
@@ -199,7 +199,7 @@ exports.updateTask = async (req, res) => {
             const fromBlockDate = new Date(blockedData.dueDate);
 
 
-            // console.log(`fromdate is ${fromBlockDate} and toBlockDate ${toBlockDate}`)
+            console.log(`fromdate is ${fromBlockDate} and toBlockDate ${toBlockDate}`)
 
             if (fromBlockDate > toBlockDate) {
 
