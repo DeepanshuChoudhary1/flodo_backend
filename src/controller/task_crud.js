@@ -174,11 +174,17 @@ exports.updateTask = async (req, res) => {
         if (status === "Done") {
             req.body.blockedBy = { "title": null, 'id': null };
 
+
+
+            await taskSchema.updateMany({ "blockedBy.id": id }, { $set: { "blockedBy.title": null, "blockedBy.id": null } });
+
             const task = await taskSchema.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
+
             return res.status(200).json({
                 success: true,
-                message: "Task Update Successfully",
+                message: "Task Updated Successfully",
                 data: task
+
             });
         }
         const data = await taskSchema.findById(id);
@@ -193,6 +199,7 @@ exports.updateTask = async (req, res) => {
                 message: "The date of the task must be bigger than the priority tasks"
             });
         }
+
         const task = await taskSchema.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
 
         return res.status(200).json({
