@@ -187,17 +187,23 @@ exports.updateTask = async (req, res) => {
 
             });
         }
-        const data = await taskSchema.findById(id);
-        const fromBlockDate = new Date(data.dueDate);
         const toBlockDate = new Date(req.body.dueDate);
-        // console.log(`fromdate is ${fromBlockDate} and toBlockDate ${toBlockDate}`)
+        const blockId = await taskSchema.blockedBy.id;
 
-        if (fromBlockDate > toBlockDate) {
+        const fromBlockDate = new Date(data.dueDate);
 
-            return res.status(409).json({
-                success: false,
-                message: "The date of the task must be bigger than the priority tasks"
-            });
+        if (blockId != null) {
+            const data = await taskSchema.findById(blockId);
+            const toBlockDate = new Date(data.dueDate);
+            // console.log(`fromdate is ${fromBlockDate} and toBlockDate ${toBlockDate}`)
+
+            if (fromBlockDate > toBlockDate) {
+
+                return res.status(409).json({
+                    success: false,
+                    message: "The date of the task must be bigger than the priority tasks"
+                });
+            }
         }
 
         const task = await taskSchema.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
