@@ -187,14 +187,18 @@ exports.updateTask = async (req, res) => {
 
             });
         }
-        const toBlockDate = new Date(req.body.dueDate);
+        // const toBlockDate = new Date(req.body.dueDate);
         const blockId = await taskSchema.blockedBy.id;
 
-        const fromBlockDate = new Date(data.dueDate);
+
 
         if (blockId != null) {
-            const data = await taskSchema.findById(blockId);
-            const toBlockDate = new Date(data.dueDate);
+            const blockedData = await taskSchema.findById(blockId);
+            const existEditableData = await taskSchema.findById(id);
+            const toBlockDate = new Date(existEditableData.dueDate);
+            const fromBlockDate = new Date(blockedData.dueDate);
+
+
             // console.log(`fromdate is ${fromBlockDate} and toBlockDate ${toBlockDate}`)
 
             if (fromBlockDate > toBlockDate) {
