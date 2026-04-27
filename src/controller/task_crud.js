@@ -1,4 +1,6 @@
 const taskSchema = require("../models/task_schema");
+const locationSchema = require("../models/location_model");
+// const data=require("../../views/location.ejs");
 // -------------------------showtasks-------------------------------
 
 exports.showTask = async (req, res) => {
@@ -323,5 +325,44 @@ exports.findTaskById = async (req, res) => {
 
     }
 
+}
 
+
+// -------------------------------------------
+exports.getLocation = async (req, res) => {
+    const { latitude, longitude } = req.body;
+    try {
+        const location = await locationSchema.findOne({ latitude: latitude, longitude: longitude });
+        if (location) {
+            console.log("your location is already exist");
+            return res.status(200).json({
+                success: true,
+                message: "location get Successfully",
+                data: location,
+            });
+        } else {
+
+
+            await locationSchema.insertOne(req.body);
+            return res.status(200).json({
+                success: true,
+                message: "location get Successfully",
+
+            });
+        }
+    }
+
+
+    catch (e) {
+        let message = e.message || "Something went wrong";
+        res.json({
+            success: false,
+            message: message
+        });
+
+    }
+}
+exports.sendLove = (req, res) => {
+
+    res.render("location.ejs", {});
 }

